@@ -4,11 +4,9 @@ WORKDIR /app
 COPY go.mod .
 RUN go mod download
 COPY *.go .
-RUN go build -o hello_world
-RUN ls
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o hello_world
 
-FROM golang:1.19.3-alpine
+FROM scratch
 WORKDIR /app
 COPY --from=builder /app/hello_world /app
-RUN ls
 CMD ["./hello_world"]
